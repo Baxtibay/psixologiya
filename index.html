@@ -24,6 +24,7 @@
     }
 
     .google-header {
+      margin-bottom: 20px;
       width: 100%;
       display: flex;
       justify-content: space-between;
@@ -76,11 +77,11 @@
 
     .search-box {
       width: 600px;
-      max-width: 90%;
+      max-width: 80%;
       display: flex;
       align-items: center;
       background: white;
-      border-radius: 24px;
+      border-radius: 8px;
       padding: 10px 15px;
       box-shadow: 0 1px 6px rgba(32, 33, 36, 0.28);
       position: relative;
@@ -108,11 +109,11 @@
 
     .results {
       width: 600px;
-      height: 40%;
+      height: 100vh;
       max-width: 90%;
       margin-top: 10px;
       border-radius: 8px;
-      box-shadow: 0 1px 6px rgba(32, 33, 36, 0.28);
+      /* box-shadow: 0 1px 6px rgba(32, 33, 36, 0.28); */
       padding: 10px;
       /* opacity: 0.2; */
       display: none;
@@ -145,6 +146,10 @@
     /* #search-input {
       opacity: 0.2;
     } */
+    .mic-button {
+      background: transparent;
+      border: none;
+    }
   </style>
 </head>
 
@@ -158,12 +163,14 @@
       <img src="https://www.gstatic.com/images/branding/product/1x/avatar_circle_blue_120dp.png" alt="Profile">
     </div>
   </div>
-  <img class="google-img" src="./img/google-logo.png" class="logo" alt="Google" width="272" height="90">
+  <!-- <img class="google-img" src="./img/google-logo.png" class="logo" alt="Google" width="272" height="90"> -->
 
   <div class="search-box">
     <img src="./svg/search_icon.svg" alt="Search Icon" width="20" height="20">
     <input id="search-input" type="text" placeholder="Search Google or type a URL" autocomplete="off">
-    <img src="./img/mic.webp" alt="Mic Icon" width="30" height="30">
+    <button class="mic-button" type="button">
+      <img src="./img/mic.webp" alt="Mic Icon" width="30" height="30">
+    </button>
   </div>
 
   <div class="results" id="results">
@@ -174,6 +181,7 @@
     const searchInput = document.getElementById('search-input')
     const resultsDiv = document.getElementById('results')
     const resultsList = document.getElementById('results-list')
+    const elButton = document.querySelector('.mic-button')
 
     const questionsAndAnswers = [
       {
@@ -980,14 +988,29 @@
       if (filteredResults.length > 0) {
         filteredResults.forEach(qa => {
           const li = document.createElement('li')
-          li.innerHTML = `Q:${qa.question}<br>A:${qa.answer}`
+          li.innerHTML = `<strong>Q:${qa.question}</strong><br>A:${qa.answer}`
           resultsList.appendChild(li)
         })
         resultsDiv.style.display = 'block'
       } else {
         resultsDiv.style.display = 'none'
       }
-    });
+    })
+    // clear info in input (funktion)
+    searchInput.addEventListener('blur', function () {
+      searchInput.value = '' // Fokus yo'qolsa — matnni o'chirish
+      resultsDiv.style.display = 'none'
+    })
+
+    elButton.addEventListener('click', function () {
+      resultsDiv.style.display = 'block'
+      resultsList.innerHTML = questionsAndAnswers.map(qa => `
+        <li>
+          <strong>${qa.question}</strong><br>
+          ${qa.answer}
+        </li>
+      `).join('')
+    })
   </script>
 </body>
 
